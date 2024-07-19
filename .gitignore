@@ -1,0 +1,9 @@
+/.ipynb_checkpoints
+/__pycache__
+
+.env
+nohup.out
+prompt.txt
+
+hci-animal-chatbot-firebase-adminsdk.json
+sido_high.json
