@@ -37,31 +37,33 @@ def geo_polygon_centroid(multi_polygon):
 
 if __name__ == "__main__":
     db = Database()
-    rt = "emd"
-    polygon = get_geo_polygon(rt)
-    count = 1
-    for p in polygon:
-        try:
-            if rt == "emd":
-                print(f"({count:4d}/{len(polygon):4d}) {p['properties']['EMD_CD']}")
-                sql = "INSERT INTO geometry_data (code, centroid_lat, centroid_lng, multi_polygon) VALUES (%s, %s, %s, %s)"
-                centroid = geo_polygon_centroid(p["geometry"]["coordinates"])
-                db.execute(sql, (p["properties"]["EMD_CD"], centroid[1], centroid[0], json.dumps(p["geometry"]["coordinates"])))
-                db.commit()
-                count += 1
-            elif rt == "sig":
-                print(f"({count:4d}/{len(polygon):4d}) {p['properties']['SIG_CD']}")
-                sql = "INSERT INTO geometry_data (code, centroid_lat, centroid_lng, multi_polygon) VALUES (%s, %s, %s, %s)"
-                centroid = geo_polygon_centroid(p["geometry"]["coordinates"])
-                db.execute(sql, (p["properties"]["SIG_CD"], centroid[1], centroid[0], json.dumps(p["geometry"]["coordinates"])))
-                db.commit()
-                count += 1
-            elif rt == "sido":
-                print(f"({count:4d}/{len(polygon):4d}) {p['properties']['CTPRVN_CD']}")
-                sql = "INSERT INTO geometry_data (code, centroid_lat, centroid_lng, multi_polygon) VALUES (%s, %s, %s, %s)"
-                centroid = geo_polygon_centroid(p["geometry"]["coordinates"])
-                db.execute(sql, (p["properties"]["CTPRVN_CD"], centroid[1], centroid[0], json.dumps(p["geometry"]["coordinates"])))
-                db.commit()
-                count += 1
-        except Exception as e:
-            print(f"Error Occured! {e}")
+    for rt in ["emd", "sig", "sido"]:
+        polygon = get_geo_polygon(rt)
+        count = 1
+        for p in polygon:
+            try:
+                if rt == "emd":
+                    print(f"({count:4d}/{len(polygon):4d}) {p['properties']['EMD_CD']}")
+                    sql = "INSERT INTO geometry_data (code, centroid_lat, centroid_lng, multi_polygon) VALUES (%s, %s, %s, %s)"
+                    centroid = geo_polygon_centroid(p["geometry"]["coordinates"])
+                    db.execute(sql, (p["properties"]["EMD_CD"], centroid[1], centroid[0], json.dumps(p["geometry"]["coordinates"])))
+                    db.commit()
+                    count += 1
+                elif rt == "sig":
+                    print(f"({count:4d}/{len(polygon):4d}) {p['properties']['SIG_CD']}")
+                    sql = "INSERT INTO geometry_data (code, centroid_lat, centroid_lng, multi_polygon) VALUES (%s, %s, %s, %s)"
+                    centroid = geo_polygon_centroid(p["geometry"]["coordinates"])
+                    db.execute(sql, (p["properties"]["SIG_CD"], centroid[1], centroid[0], json.dumps(p["geometry"]["coordinates"])))
+                    db.commit()
+                    count += 1
+                elif rt == "sido":
+                    print(f"({count:4d}/{len(polygon):4d}) {p['properties']['CTPRVN_CD']}")
+                    sql = "INSERT INTO geometry_data (code, centroid_lat, centroid_lng, multi_polygon) VALUES (%s, %s, %s, %s)"
+                    centroid = geo_polygon_centroid(p["geometry"]["coordinates"])
+                    db.execute(sql, (p["properties"]["CTPRVN_CD"], centroid[1], centroid[0], json.dumps(p["geometry"]["coordinates"])))
+                    db.commit()
+                    count += 1
+            except Exception as e:
+                print(f"Error Occured! {e}")
+    db.close()
+    
